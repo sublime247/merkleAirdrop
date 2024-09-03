@@ -5,9 +5,9 @@ import "@openzeppelin/contracts/utils/cryptography/MerkleProof.sol";
 
 
 contract MerkleAirdrop{
-    bytes32 merkleRoot;
-    address tokenAddress;
-    address owner;
+    bytes32  merkleRoot;
+    address public tokenAddress;
+    address public owner;
 
 
    mapping (address => bool) hasClaimed;
@@ -20,6 +20,8 @@ contract MerkleAirdrop{
 
 error TokenHasBeenClaimed();
 error NotOwner();
+error AddressZerodetected();
+
 
 
 function OnlyOwner()view private{
@@ -31,21 +33,30 @@ function OnlyOwner()view private{
 event AirdropClaimed(address indexed _user, uint256 _amount);
 event AirdropWithdrawn(uint  _tokenBalance, string successMessage);
 
-function claimAirdrop(uint256 _amount, bytes32[] calldata _merkleProof ) external {
-if(hasClaimed[msg.sender]){
-    revert TokenHasBeenClaimed();
- }
- bytes32 leaf = keccak256(abi.encodePacked(msg.sender, _amount));
- require(MerkleProof.verify(_merkleProof, merkleRoot, leaf ));
+event Debug(bytes32 leaf, bool proofValid);
 
 
- hasClaimed[msg.sender]=true;
- 
-IERC20(tokenAddress).transfer(msg.sender, _amount);
 
-emit AirdropClaimed(msg.sender, _amount);
+function claimAirdrop(uint256 _amount, bytes32[] calldata _merkleProof) external  {
+if(msg.sender==address(0)){
+    revert AddressZerodetected();
 }
+if(!hasClaimed[msg.sender]){
+   revert TokenHasBeenClaimed();
+} 
 
+    bytes32 leaf = keccak256(abi.encodePacked(msg.sender, _amount));
+    
+    bool proofValid = MerkleProof.verify(_merkleProof, merkleRoot, leaf);
+    emit Debug(leaf, proofValid);  // Debug event
+    
+    require(proofValid, "Invalid Merkle proof");
+    
+    hasClaimed[msg.sender] = true;
+    require(IERC20(tokenAddress).transfer(msg.sender, _amount), "Token transfer failed");
+    
+    emit AirdropClaimed(msg.sender, _amount);
+}
 
 
 function updateMerkleroot(bytes32 _merkleroot) external {
