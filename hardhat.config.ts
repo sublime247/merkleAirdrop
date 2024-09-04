@@ -10,7 +10,7 @@ const config: HardhatUserConfig = {
     "lisk-sepolia": {
       url: process.env.LISK_RPC_URL!,
       accounts: [process.env.ACCOUNT_PRIVATE_KEY!],
-      gasPrice: 1000000000,
+      gasPrice: 100000000000,
     },
   },
   etherscan: {

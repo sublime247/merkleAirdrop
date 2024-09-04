@@ -47,7 +47,7 @@ if(!hasClaimed[msg.sender]){
 
     bytes32 leaf = keccak256(abi.encodePacked(msg.sender, _amount));
     
-    bool proofValid = MerkleProof.verify(_merkleProof, 0xb54aa9a56b21e38132edaeafd9ad5d4a531afa2b267d2f2610d008dfcf15d844, leaf);
+    bool proofValid = MerkleProof.verify(_merkleProof, merkleRoot, leaf);
     emit Debug(leaf, proofValid);  // Debug event
     
     require(proofValid, "Invalid Merkle proof");
