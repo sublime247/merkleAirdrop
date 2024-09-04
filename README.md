@@ -5,9 +5,15 @@ The goal of this project is to implement a smart contract for an airdrop using a
 
 ### Project Structure
 CSV File: Contains a list of addresses and the corresponding amount of tokens each address is eligible to receive.
-Merkle Tree Script (merkle.js/merkle.ts): A script that generates the Merkle root from the provided CSV file.
+Merkle Tree Script (merkle.ts): This script generates the Merkle root from the provided CSV file.
+
 Solidity Contract (MerkleAirdrop.sol): The smart contract that manages the airdrop process and verifies claims using Merkle proofs.
 Test Suite: A set of tests written using Hardhat to ensure the correctness of the smart contract.
+
+<!-- imnage -->
+Verifying the Merkle proof for an address to claim tokens from the airdrop.
+![Alt text](claim_airdrop.png)
+
 
 
 ## Getting Started
