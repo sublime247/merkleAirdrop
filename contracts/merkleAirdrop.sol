@@ -5,7 +5,7 @@ import "@openzeppelin/contracts/utils/cryptography/MerkleProof.sol";
 
 
 contract MerkleAirdrop{
-    bytes32  merkleRoot;
+    bytes32 public  merkleRoot;
     address public tokenAddress;
     address public owner;
 
@@ -41,7 +41,7 @@ function claimAirdrop(uint256 _amount, bytes32[] calldata _merkleProof) external
 if(msg.sender==address(0)){
     revert AddressZerodetected();
 }
-if(!hasClaimed[msg.sender]){
+if(hasClaimed[msg.sender]){
    revert TokenHasBeenClaimed();
 } 
 
